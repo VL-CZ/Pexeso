@@ -30,7 +30,7 @@ namespace Pexeso
             if (_revealed == 2)
             {
                 await Task.Delay(500); // wait for 0.5s
-                _game.ExecuteMove(_previousClickedButtonID, buttonID);
+                await _game.ExecuteMove(_previousClickedButtonID, buttonID);
                 _revealed = 0;
 
                 if (_game.Winner != null)

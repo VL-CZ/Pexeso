@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Pexeso.Enums
 {
-    
+    public enum PlayerType { Player, Bot}
 }

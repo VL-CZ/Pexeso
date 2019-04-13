@@ -13,21 +13,21 @@ namespace Pexeso.Models
         /// </summary>
         private List<Box> _knownBoxes;
         /// <summary>
-        /// IDs of unknown boxes
+        /// IDs of all boxes in game
         /// </summary>
-        private List<int> _unknowsBoxesID;
+        private List<int> _allBoxesIDs;
         private Random _generator;
 
         public GameBot(int boxesCount, GameBoard board) : base()
         {
             _generator = new Random();
             _knownBoxes = new List<Box>();
-            _unknowsBoxesID = new List<int>();
+            _allBoxesIDs = new List<int>();
             _board = board;
 
             for (int i = 0; i < boxesCount; i++)
             {
-                _unknowsBoxesID.Add(i);
+                _allBoxesIDs.Add(i);
             }
         }
 
@@ -60,13 +60,16 @@ namespace Pexeso.Models
         /// <returns></returns>
         private Tuple<Box, Box> GenerateTuple()
         {
-            _unknowsBoxesID = _unknowsBoxesID.Distinct().ToList();
+            _allBoxesIDs = _allBoxesIDs.Distinct().ToList();
+            _allBoxesIDs.RemoveAll(boxID => _board.GetBoxByID(boxID).BoxVisibility == System.Windows.Visibility.Hidden); // remove all taken cards
 
-            int index = _generator.Next(0, _unknowsBoxesID.Count);
-            int boxId1 = _unknowsBoxesID.ElementAt(index);
+            int index = _generator.Next(0, _allBoxesIDs.Count);
+            int boxId1 = _allBoxesIDs.ElementAt(index);
+            _allBoxesIDs.Remove(boxId1); // remove -> can't generate two same indexes, then add
 
-            index = _generator.Next(0, _unknowsBoxesID.Count);
-            int boxId2 = _unknowsBoxesID.ElementAt(index);
+            index = _generator.Next(0, _allBoxesIDs.Count);
+            int boxId2 = _allBoxesIDs.ElementAt(index);
+            _allBoxesIDs.Add(boxId1); // add again
 
             Box box1 = _board.GetBoxByID(boxId1);
             Box box2 = _board.GetBoxByID(boxId2);
@@ -77,7 +80,7 @@ namespace Pexeso.Models
         /// <summary>
         /// execute move, choose best option
         /// </summary>
-        public async void ExecuteMove()
+        public async Task<bool> ExecuteMove()
         {
             var bestMove = FindPair();
             Box box1, box2;
@@ -100,9 +103,7 @@ namespace Pexeso.Models
             AddToKnownBoxes(box2);
             await Task.Delay(500);
 
-            base.ExecuteMove(box1, box2);
-            _knownBoxes.Remove(box1);
-            _knownBoxes.Remove(box2);
+            return base.ExecuteMove(box1, box2);
         }
 
         /// <summary>
@@ -114,10 +115,6 @@ namespace Pexeso.Models
             if (!_knownBoxes.Contains(box))
             {
                 _knownBoxes.Add(box);
-            }
-            if (_unknowsBoxesID.Contains(box.ID))
-            {
-                _unknowsBoxesID.Remove(box.ID);
             }
         }
     }

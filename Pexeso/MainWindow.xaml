@@ -37,6 +37,9 @@
         <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Name="WinnerTextBlock"
                    Text="{Binding Winner, StringFormat=Winner: {0}}"/>
 
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="20"
+                   Text="{Binding CurrentPlayer, StringFormat=Current Player: {0}}"/>
+        
         <ItemsControl Name="GameBoard" Grid.Row="1" ItemsSource="{Binding Board.Board}" ItemTemplate="{DynamicResource DataTemplate_Level1}"
                       VerticalAlignment="Center" HorizontalAlignment="Center"/>
         
