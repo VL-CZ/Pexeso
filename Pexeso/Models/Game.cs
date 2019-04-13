@@ -24,11 +24,6 @@ namespace Pexeso.Models
         }
 
         /// <summary>
-        /// is the last move pair?
-        /// </summary>
-        public bool IsLastMovePair { get; private set; }
-
-        /// <summary>
         /// size of the game board
         /// </summary>
         private readonly int _boardSize = 4;
@@ -37,7 +32,7 @@ namespace Pexeso.Models
         {
             Board = new GameBoard(_boardSize);
             Player = new Player();
-            Bot = new GameBot(Board);
+            Bot = new GameBot(Board.BoxCount, Board);
         }
 
         /// <summary>
@@ -45,14 +40,30 @@ namespace Pexeso.Models
         /// </summary>
         /// <param name="cell1_ID"></param>
         /// <param name="cell2_ID"></param>
-        public void ExecuteMove(int cell1_ID, int cell2_ID)
+        public async void ExecuteMove(int cell1_ID, int cell2_ID)
         {
             Box box1 = Board.GetBoxByID(cell1_ID);
             Box box2 = Board.GetBoxByID(cell2_ID);
-            IsLastMovePair = Player.ExecuteMove(box1, box2);
 
+            Player.ExecuteMove(box1, box2); // player's move
 
+            Bot.AddToKnownBoxes(box1); // add cells to bot's memory
+            Bot.AddToKnownBoxes(box2);
+            CheckWinner();
 
+            if (Winner == null)
+            {
+                await Task.Delay(500);
+                Bot.ExecuteMove(); // bot's move
+                CheckWinner();
+            }
+        }
+
+        /// <summary>
+        /// check if there's winner
+        /// </summary>
+        public void CheckWinner()
+        {
             if (Player.Score + Bot.Score == Board.PairCount)
             {
                 if (Player.Score > Bot.Score)
