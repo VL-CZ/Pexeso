@@ -8,10 +8,12 @@ namespace Pexeso.Models
 {
     class GameBot : Player
     {
-        public int[,] Board { get; }
-        public GameBot() : base()
+        private GameBoard _board;
+        private int?[,] memory;
+        public GameBot(GameBoard board) : base()
         {
-            
+            _board = board;
+            memory = new int?[board.Size, board.Size];
         }
     }
 }

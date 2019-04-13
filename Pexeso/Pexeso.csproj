@@ -74,6 +74,7 @@
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GameBoard.cs" />
     <Compile Include="Models\GameBot.cs" />
+    <Compile Include="Models\ObservableObject.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

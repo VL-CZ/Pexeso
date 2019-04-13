@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,15 +8,17 @@ using System.Windows;
 
 namespace Pexeso.Models
 {
-    class GameBoard
+    class GameBoard : ObservableObject
     {
-        public Box[,] Board { get; }
+        public ObservableCollection<ObservableCollection<Box>> Board { get; }
+
+        public int Size { get; }
 
         public int BoxCount
         {
             get
             {
-                return Board.GetLength(0) * Board.GetLength(1);
+                return Size * Size;
             }
         }
 
@@ -39,7 +42,8 @@ namespace Pexeso.Models
             }
             else
             {
-                Board = new Box[N, N];
+                Board = new ObservableCollection<ObservableCollection<Box>>();
+                Size = N;
                 Initialize();
             }
         }
@@ -55,18 +59,36 @@ namespace Pexeso.Models
                 possibleNumbers.Add(i);
             }
 
-            for (int i = 0; i < Board.GetLength(0); i++)
+            for (int i = 0; i < Size; i++)
             {
-                for (int j = 0; j < Board.GetLength(1); j++)
+                var row = new ObservableCollection<Box>();
+                for (int j = 0; j < Size; j++)
                 {
                     int index = generator.Next(0, possibleNumbers.Count);
+                    int cellID = i * Size + j;
 
-                    Board[i, j] = new Box(possibleNumbers[index]);
+                    row.Add(new Box(cellID, possibleNumbers[index]));
 
                     possibleNumbers.RemoveAt(index);
                 }
+                Board.Add(row);
             }
         }
 
+        public Box GetBoxByID(int id)
+        {
+            for (int i = 0; i < Size; i++)
+            {
+                for (int j = 0; j < Size; j++)
+                {
+                    Box box = Board[i][j];
+                    if (box.ID == id)
+                    {
+                        return box;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

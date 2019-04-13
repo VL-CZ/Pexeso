@@ -5,10 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Pexeso"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" MinHeight="700" MinWidth="1200" WindowStartupLocation="CenterScreen" WindowStyle="ThreeDBorderWindow">
+    <Window.Resources>
+        <!-- Custom controls -->
+        <DataTemplate x:Key="DataTemplate_Level2">
+            <Button Content="{Binding Content}" Visibility="{Binding BoxVisibility}" Tag="{Binding ID}" Height="60" Width="60" BorderThickness="0.5" Margin="2"
+                    Click="Button_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="20" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="DataTemplate_Level1">
+            <ItemsControl ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate_Level2}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="0" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Background="Cyan">
-            
-        </Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <ItemsControl Name="GameBoard" Grid.Row="1" ItemsSource="{Binding Board.Board}" ItemTemplate="{DynamicResource DataTemplate_Level1}"
+                      VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        
     </Grid>
 </Window>

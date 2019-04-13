@@ -1,43 +1,46 @@
 ﻿using Pexeso.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Pexeso.Models
 {
-    class Game
+    class Game : ObservableObject
     {
-        private GameBoard _board;
-        private Player _player;
-        private GameBot _bot;
-        private PlayerType _nextPlayer;
-        public Player Winner { get; private set; }
+        private PlayerType _currentPlayerType;
+        private Player _currentPlayer;
+        public GameBoard Board { get; }
+        public Player Player { get; }
+        public GameBot Bot { get; }
+        public string Winner { get; private set; }
+        public bool IsLastMovePair { get; private set; }
+
         public Game()
         {
-            _board = new GameBoard(8);
-            _player = new Player();
-            _bot = new GameBot();
-            _nextPlayer = PlayerType.Human;
+            Board = new GameBoard(8);
+            Player = new Player();
+            Bot = new GameBot(Board);
+            _currentPlayer = Player;
+            _currentPlayerType = PlayerType.Human;
         }
 
-        public void Play()
+        public void ExecuteMove(int cell1_ID, int cell2_ID)
         {
-            while (_player.Score + _bot.Score < _board.PairCount)
-            {
-                SwitchPlayers();
-            }
+            Box box1 = Board.GetBoxByID(cell1_ID);
+            Box box2 = Board.GetBoxByID(cell2_ID);
+            IsLastMovePair = Player.ExecuteMove(box1, box2);
         }
 
         private void SwitchPlayers()
         {
-            if (_nextPlayer == PlayerType.Human)
+            if (_currentPlayerType == PlayerType.Human)
             {
-                _nextPlayer = PlayerType.Bot;
+                _currentPlayerType = PlayerType.Bot;
+                _currentPlayer = Bot;
             }
             else
-                _nextPlayer = PlayerType.Human;
+            {
+                _currentPlayerType = PlayerType.Human;
+                _currentPlayer = Player;
+            }
         }
     }
 }
