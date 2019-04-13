@@ -1,16 +1,12 @@
-﻿using Pexeso.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 
 namespace Pexeso.Models
 {
-    class Box : ObservableObject
+    public class Box : ObservableObject
     {
         private Visibility _boxVisibility;
+
         /// <summary>
         /// Is this box visible?
         /// note: this property is used only for binding
@@ -32,6 +28,18 @@ namespace Pexeso.Models
 
         public int ID { get; }
 
+        private string _content;
+
+        public string Content
+        {
+            get { return _content; }
+            private set
+            {
+                _content = value;
+                RaisePropertyChanged();
+            }
+        }
+
         public Box(int id, int value)
         {
             ID = id;
@@ -42,6 +50,16 @@ namespace Pexeso.Models
         public void MakeTransparent()
         {
             BoxVisibility = Visibility.Hidden;
+        }
+
+        public void Reveal()
+        {
+            Content = Value.ToString();
+        }
+
+        public void Hide()
+        {
+            Content = String.Empty;
         }
     }
 }

@@ -90,5 +90,15 @@ namespace Pexeso.Models
             }
             return null;
         }
+
+        public void RevealBox(int boxID)
+        {
+            GetBoxByID(boxID).Reveal();
+        }
+
+        public void HideBox(int boxID)
+        {
+            GetBoxByID(boxID).Hide();
+        }
     }
 }

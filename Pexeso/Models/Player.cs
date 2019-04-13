@@ -43,6 +43,8 @@ namespace Pexeso.Models
             }
             else
             {
+                box1.Hide();
+                box2.Hide();
                 return false;
             }
         }
