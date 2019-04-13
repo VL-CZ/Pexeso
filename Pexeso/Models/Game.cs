@@ -5,41 +5,68 @@ namespace Pexeso.Models
 {
     class Game : ObservableObject
     {
-        private PlayerType _currentPlayerType;
-        private Player _currentPlayer;
         public GameBoard Board { get; }
         public Player Player { get; }
         public GameBot Bot { get; }
-        public string Winner { get; private set; }
+
+        private string _winner;
+        /// <summary>
+        /// check if there's winner
+        /// </summary>
+        public string Winner
+        {
+            get => _winner;
+            private set
+            {
+                _winner = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// is the last move pair?
+        /// </summary>
         public bool IsLastMovePair { get; private set; }
+
+        /// <summary>
+        /// size of the game board
+        /// </summary>
+        private readonly int _boardSize = 4;
 
         public Game()
         {
-            Board = new GameBoard(8);
+            Board = new GameBoard(_boardSize);
             Player = new Player();
             Bot = new GameBot(Board);
-            _currentPlayer = Player;
-            _currentPlayerType = PlayerType.Human;
         }
 
+        /// <summary>
+        /// execute moves of the player and bot
+        /// </summary>
+        /// <param name="cell1_ID"></param>
+        /// <param name="cell2_ID"></param>
         public void ExecuteMove(int cell1_ID, int cell2_ID)
         {
             Box box1 = Board.GetBoxByID(cell1_ID);
             Box box2 = Board.GetBoxByID(cell2_ID);
             IsLastMovePair = Player.ExecuteMove(box1, box2);
-        }
 
-        private void SwitchPlayers()
-        {
-            if (_currentPlayerType == PlayerType.Human)
+
+
+            if (Player.Score + Bot.Score == Board.PairCount)
             {
-                _currentPlayerType = PlayerType.Bot;
-                _currentPlayer = Bot;
-            }
-            else
-            {
-                _currentPlayerType = PlayerType.Human;
-                _currentPlayer = Player;
+                if (Player.Score > Bot.Score)
+                {
+                    Winner = nameof(Player);
+                }
+                else if (Player.Score < Bot.Score)
+                {
+                    Winner = nameof(Bot);
+                }
+                else
+                {
+                    Winner = "Draw";
+                }
             }
         }
     }

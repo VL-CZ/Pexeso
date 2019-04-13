@@ -25,9 +25,17 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="70"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <TextBlock Text="{Binding Player.Score, StringFormat=Player: {0}}"></TextBlock>
+            <TextBlock Text="{Binding Bot.Score, StringFormat=Bot: {0}}"></TextBlock>
+        </StackPanel>
+
+        <TextBlock Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden" Name="WinnerTextBlock"
+                   Text="{Binding Winner, StringFormat=Winner: {0}}"/>
 
         <ItemsControl Name="GameBoard" Grid.Row="1" ItemsSource="{Binding Board.Board}" ItemTemplate="{DynamicResource DataTemplate_Level1}"
                       VerticalAlignment="Center" HorizontalAlignment="Center"/>

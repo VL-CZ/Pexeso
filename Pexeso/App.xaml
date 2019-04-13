@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:Pexeso"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <Style TargetType="TextBlock">
+            <Setter Property="FontSize" Value="25"/>
+        </Style>
     </Application.Resources>
 </Application>

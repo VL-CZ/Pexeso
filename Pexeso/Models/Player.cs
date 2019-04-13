@@ -21,7 +21,6 @@ namespace Pexeso.Models
             }
         }
 
-
         public Player()
         {
             Score = 0;
